@@ -41,8 +41,8 @@
 
 ### Pages
 
-- [ ] Signup
-- [ ] Login
+- Signup
+- Login
 - Create/edit Restaurant information (owner)
 - CRUD meal of a restaurant (owner)
 - Restaurant List
@@ -52,3 +52,4 @@
 - Order list (regular user)
 - Order details (meals, change status)
 - Order history
+- Block regular user dialog
