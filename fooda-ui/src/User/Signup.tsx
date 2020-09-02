@@ -1,34 +1,43 @@
 import React, { useState, useContext, useEffect } from "react";
 import { useHistory } from "react-router-dom";
 import { Button, Form } from "react-bootstrap";
+import { useFormik } from "formik";
 
 import { RootContext, UserType } from "../context";
+import userService, { UserSignup } from "./service";
 
 export default function Signup() {
   const history = useHistory();
-  const [username, setUsername] = useState("");
-  const [email, setEmail] = useState("");
-  const [type, setType] = useState<UserType>(UserType.REGULAR);
-  const [password, setPassword] = useState("");
+  const [error, setError] = useState("");
 
   const { clearUser } = useContext(RootContext);
-
-  const handleSubmit = () => {
-    console.log("SIGNUP", username, email, password, type);
-    history.push("/");
-  };
 
   useEffect(() => {
     clearUser();
   }, [clearUser]);
 
-  function isValid() {
-    return username.length > 0 && email.length > 0 && password.length > 0;
-  }
+  const formik = useFormik<UserSignup>({
+    initialValues: {
+      username: "",
+      email: "",
+      password: "",
+      user_type: UserType.REGULAR,
+    },
+
+    onSubmit: async (values) => {
+      setError("");
+      try {
+        const result = await userService.signup(values);
+        history.push("/");
+      } catch (err) {
+        setError(String(err));
+      }
+    },
+  });
 
   return (
     <Form
-      onSubmit={handleSubmit}
+      onSubmit={formik.handleSubmit as any}
       style={{ margin: "0 auto", maxWidth: "320px" }}
     >
       <h1 className="text-center mb-4">Create account</h1>
@@ -37,24 +46,27 @@ export default function Signup() {
         <Form.Control
           autoFocus
           type="text"
-          value={username}
-          onChange={(e) => setUsername(e.target.value)}
+          name="username"
+          value={formik.values.username}
+          onChange={formik.handleChange}
         />
       </Form.Group>
       <Form.Group controlId="email">
         <Form.Label>Email</Form.Label>
         <Form.Control
           type="text"
-          value={email}
-          onChange={(e) => setEmail(e.target.value)}
+          name="email"
+          value={formik.values.email}
+          onChange={formik.handleChange}
         />
       </Form.Group>
       <Form.Group controlId="type">
         <Form.Label>Account Type</Form.Label>
         <Form.Control
           as="select"
-          value={type}
-          onChange={(e) => setType(e.target.value as any)}
+          name="user_type"
+          value={formik.values.user_type}
+          onChange={formik.handleChange}
         >
           <option value={UserType.REGULAR}>Regular user</option>
           <option value={UserType.OWNER}>Restaurant owner</option>
@@ -63,12 +75,14 @@ export default function Signup() {
       <Form.Group controlId="password">
         <Form.Label>Password</Form.Label>
         <Form.Control
-          value={password}
-          onChange={(e) => setPassword(e.target.value)}
           type="password"
+          name="password"
+          value={formik.values.password}
+          onChange={formik.handleChange}
         />
       </Form.Group>
-      <Button block type="submit" disabled={!isValid()}>
+      {error && <div className="text-danger mb-3">{error}</div>}
+      <Button block type="submit">
         Signup
       </Button>
     </Form>

@@ -22,7 +22,7 @@ export default function Topbar() {
           Fooda
         </Link>
         <Navbar.Toggle aria-controls="basic-navbar-nav" />
-        {user.isAnonymous || (
+        {user.anonymous || (
           <Navbar.Collapse id="basic-navbar-nav">
             <Nav className="mr-auto">
               <Link className="nav-link" to="/restaurants">
@@ -35,7 +35,7 @@ export default function Topbar() {
           </Navbar.Collapse>
         )}
         <Navbar.Collapse className="justify-content-end">
-          {user.isAnonymous ? (
+          {user.anonymous ? (
             <Nav>
               <Link className="nav-link" to="/login">
                 Login
@@ -47,7 +47,7 @@ export default function Topbar() {
           ) : (
             <Nav>
               <Navbar.Text className="text-white mr-2">
-                Hello {user.name}!
+                Hello {user.first_name}!
               </Navbar.Text>
               <Link className="nav-link" to="/login">
                 Logout

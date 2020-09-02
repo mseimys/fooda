@@ -15,7 +15,7 @@ function PrivateRoute({ children, ...rest }: RouteProps) {
     <Route
       {...rest}
       render={({ location }) =>
-        user.isAnonymous ? (
+        user.anonymous ? (
           <Redirect
             to={{
               pathname: "/login",
@@ -36,9 +36,6 @@ export default function Routes() {
       <Switch>
         <Route path="/login">
           <Login />
-        </Route>
-        <Route path="/signup">
-          <Signup />
         </Route>
         <Route path="/signup">
           <Signup />

@@ -3,26 +3,38 @@ import { useHistory } from "react-router-dom";
 import { Button, Form } from "react-bootstrap";
 
 import logo from "../logo.png";
-import { RootContext, UserType } from "../context";
+import { RootContext } from "../context";
+import userService from "./service";
 
 export default function Login() {
   const history = useHistory();
+  const [error, setError] = useState("");
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const { setUser, clearUser } = useContext(RootContext);
 
-  useEffect(() => {
-    clearUser();
-  }, [clearUser]);
+  useEffect(clearUser, []);
 
-  const handleSubmit = () => {
-    setUser({
-      isAnonymous: false,
-      type: UserType.REGULAR,
-      name: username,
-      token: "token",
-    });
-    history.push("/");
+  const handleSubmit = async (event: any) => {
+    setError("");
+    event.preventDefault();
+    event.stopPropagation();
+    try {
+      const tokens = await userService.login({ username, password });
+      const user = await userService.me(tokens.access);
+      setUser({
+        ...user,
+        token: tokens.access,
+        anonymous: false,
+      });
+      history.push("/");
+    } catch (err) {
+      let message = String(err);
+      if (err.response && err.response.data) {
+        message = err.response.data.detail;
+      }
+      setError(message);
+    }
   };
 
   function isValid() {
@@ -54,6 +66,7 @@ export default function Login() {
           type="password"
         />
       </Form.Group>
+      {error && <div className="text-danger mb-3">{error}</div>}
       <Button block type="submit" disabled={!isValid()}>
         Login
       </Button>

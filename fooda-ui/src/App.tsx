@@ -6,16 +6,23 @@ import Topbar from "./Topbar";
 import Routes from "./Routes";
 import { User, RootContext, anonymousUser } from "./context";
 
-const currentUser = JSON.parse(
-  localStorage.getItem("user") || JSON.stringify(anonymousUser)
-);
+let currentUser = anonymousUser;
+
+try {
+  currentUser = JSON.parse(
+    localStorage.getItem("user") || JSON.stringify(anonymousUser)
+  );
+} catch (err) {}
 
 export default function App() {
-  const [user, setUser] = useState(currentUser);
+  const [user, setUser] = useState<User>(currentUser);
 
   const defaultContext = {
     user,
-    clearUser: () => setUser(anonymousUser),
+    clearUser: () => {
+      setUser(anonymousUser);
+      localStorage.removeItem("user");
+    },
     setUser: (user: User) => {
       setUser(user);
       localStorage.setItem("user", JSON.stringify(user));

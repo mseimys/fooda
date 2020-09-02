@@ -1,23 +1,25 @@
 import { createContext } from "react";
 
 export enum UserType {
-  REGULAR,
-  OWNER,
-  ANONYMOUS,
+  REGULAR = "REGULAR",
+  OWNER = "OWNER",
 }
 
 export type User = {
-  isAnonymous: boolean;
-  type: UserType;
-  name: string;
+  id?: number;
+  username?: string;
+  email?: string;
+  user_type?: UserType;
+  first_name?: string;
+  last_name?: string;
   token: string;
+  anonymous: boolean;
 };
 
-export const anonymousUser = {
-  isAnonymous: true,
-  type: UserType.ANONYMOUS,
-  name: "Anonymous",
+export const anonymousUser: User = {
+  first_name: "Anonymous",
   token: "",
+  anonymous: true,
 };
 
 export const RootContext = createContext({
