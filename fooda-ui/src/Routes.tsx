@@ -6,6 +6,7 @@ import { RootContext } from "./context";
 import Dashboard from "./Dashboard/Dashboard";
 import OrderList from "./Orders/OrderList";
 import RestaurantList from "./Restaurants/RestaurantList";
+import RestaurantDetails from "./Restaurants/RestaurantDetails";
 import Login from "./User/Login";
 import Signup from "./User/Signup";
 
@@ -45,6 +46,9 @@ export default function Routes() {
         </PrivateRoute>
         <PrivateRoute path="/orders">
           <OrderList />
+        </PrivateRoute>
+        <PrivateRoute exact path="/restaurants/:restaurantId">
+          <RestaurantDetails />
         </PrivateRoute>
         <PrivateRoute path="/restaurants">
           <RestaurantList />
