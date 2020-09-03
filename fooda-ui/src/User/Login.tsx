@@ -1,49 +1,55 @@
 import React, { useState, useContext, useEffect } from "react";
 import { useHistory } from "react-router-dom";
 import { Button, Form } from "react-bootstrap";
+import { useFormik } from "formik";
 
 import logo from "../logo.png";
 import { RootContext } from "../context";
-import userService from "./service";
+import userService, { Credentials } from "./service";
 
 export default function Login() {
   const history = useHistory();
   const [error, setError] = useState("");
-  const [username, setUsername] = useState("");
-  const [password, setPassword] = useState("");
   const { setUser, clearUser } = useContext(RootContext);
 
   useEffect(clearUser, []);
 
-  const handleSubmit = async (event: any) => {
-    setError("");
-    event.preventDefault();
-    event.stopPropagation();
-    try {
-      const tokens = await userService.login({ username, password });
-      const user = await userService.me(tokens.access);
-      setUser({
-        ...user,
-        token: tokens.access,
-        anonymous: false,
-      });
-      history.push("/");
-    } catch (err) {
-      let message = String(err);
-      if (err.response && err.response.data) {
-        message = err.response.data.detail;
-      }
-      setError(message);
-    }
-  };
+  const formik = useFormik<Credentials>({
+    initialValues: {
+      username: "",
+      password: "",
+    },
 
-  function isValid() {
-    return username.length > 0 && password.length > 0;
-  }
+    validate: (values) => {
+      const errors: Record<string, string> = {};
+      if (!values.username) {
+        errors.username = "Required";
+      }
+      if (!values.password) {
+        errors.password = "Required";
+      }
+      return errors;
+    },
+
+    onSubmit: async (values) => {
+      setError("");
+      try {
+        const user = await userService.login(values);
+        setUser(user);
+        history.push("/");
+      } catch (err) {
+        let message = String(err);
+        if (err.response && err.response.data) {
+          message = err.response.data.detail;
+        }
+        setError(message);
+      }
+    },
+  });
 
   return (
     <Form
-      onSubmit={handleSubmit}
+      onSubmit={formik.handleSubmit as any}
       style={{ margin: "0 auto", maxWidth: "320px" }}
     >
       <div className="text-center">
@@ -54,20 +60,22 @@ export default function Login() {
         <Form.Control
           autoFocus
           type="text"
-          value={username}
-          onChange={(e) => setUsername(e.target.value)}
+          name="username"
+          value={formik.values.username}
+          onChange={formik.handleChange}
         />
       </Form.Group>
       <Form.Group controlId="password">
         <Form.Label>Password</Form.Label>
         <Form.Control
-          value={password}
-          onChange={(e) => setPassword(e.target.value)}
           type="password"
+          name="password"
+          value={formik.values.password}
+          onChange={formik.handleChange}
         />
       </Form.Group>
       {error && <div className="text-danger mb-3">{error}</div>}
-      <Button block type="submit" disabled={!isValid()}>
+      <Button block type="submit" disabled={!(formik.isValid && formik.dirty)}>
         Login
       </Button>
     </Form>

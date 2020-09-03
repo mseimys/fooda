@@ -20,6 +20,8 @@ export default function Signup() {
     initialValues: {
       username: "",
       email: "",
+      first_name: "",
+      last_name: "",
       password: "",
       user_type: UserType.REGULAR,
     },
@@ -27,7 +29,7 @@ export default function Signup() {
     onSubmit: async (values) => {
       setError("");
       try {
-        const result = await userService.signup(values);
+        await userService.signup(values);
         history.push("/");
       } catch (err) {
         setError(String(err));
@@ -57,6 +59,24 @@ export default function Signup() {
           type="text"
           name="email"
           value={formik.values.email}
+          onChange={formik.handleChange}
+        />
+      </Form.Group>
+      <Form.Group controlId="email">
+        <Form.Label>First Name</Form.Label>
+        <Form.Control
+          type="text"
+          name="first_name"
+          value={formik.values.first_name}
+          onChange={formik.handleChange}
+        />
+      </Form.Group>
+      <Form.Group controlId="email">
+        <Form.Label>Last Name</Form.Label>
+        <Form.Control
+          type="text"
+          name="last_name"
+          value={formik.values.last_name}
           onChange={formik.handleChange}
         />
       </Form.Group>

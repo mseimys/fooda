@@ -5,14 +5,9 @@ import "./index.css";
 import Topbar from "./Topbar";
 import Routes from "./Routes";
 import { User, RootContext, anonymousUser } from "./context";
+import userService from "./User/service";
 
-let currentUser = anonymousUser;
-
-try {
-  currentUser = JSON.parse(
-    localStorage.getItem("user") || JSON.stringify(anonymousUser)
-  );
-} catch (err) {}
+const currentUser = userService.getCurrentUser();
 
 export default function App() {
   const [user, setUser] = useState<User>(currentUser);
@@ -21,11 +16,11 @@ export default function App() {
     user,
     clearUser: () => {
       setUser(anonymousUser);
-      localStorage.removeItem("user");
+      userService.logout();
     },
-    setUser: (user: User) => {
-      setUser(user);
-      localStorage.setItem("user", JSON.stringify(user));
+    setUser: (newUser: User) => {
+      setUser(newUser);
+      userService.saveUser(newUser);
     },
   };
 
