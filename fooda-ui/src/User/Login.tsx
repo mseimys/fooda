@@ -39,8 +39,8 @@ export default function Login() {
         history.push("/");
       } catch (err) {
         let message = String(err);
-        if (err.response && err.response.data) {
-          message = err.response.data.detail;
+        if (err.data) {
+          message = err.data.detail;
         }
         setError(message);
       }
@@ -49,7 +49,11 @@ export default function Login() {
 
   return (
     <Form
-      onSubmit={formik.handleSubmit as any}
+      onSubmit={(event: React.FormEvent<HTMLFormElement>) => {
+        event.stopPropagation();
+        event.preventDefault();
+        formik.handleSubmit(event);
+      }}
       style={{ margin: "0 auto", maxWidth: "320px" }}
     >
       <div className="text-center">

@@ -28,6 +28,7 @@ const userService = {
       throw Error("Error! " + JSON.stringify(message));
     }
   },
+
   login: async ({ username, password }: Credentials) => {
     const result = await axios.post<{ access: string; refresh: string }>(
       API.TOKEN,
@@ -38,9 +39,11 @@ const userService = {
     const user = await userService.me();
     return { ...user, token, anonymous: false };
   },
+
   saveUser: (user: User) => {
     localStorage.setItem("user", JSON.stringify(user));
   },
+
   getCurrentUser: () => {
     try {
       const currentUser: User = JSON.parse(
@@ -51,10 +54,12 @@ const userService = {
     } catch (err) {}
     return anonymousUser;
   },
+
   logout: () => {
     clearAuthInterceptor();
     localStorage.removeItem("user");
   },
+
   me: async () => {
     const result = await axios.get<User>(API.USER);
     return result.data;
