@@ -2,3 +2,6 @@ django
 djangorestframework
 djangorestframework_simplejwt
 django-cors-headers
+pytest
+pytest-django
+factory_boy

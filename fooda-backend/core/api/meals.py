@@ -1,7 +1,7 @@
 from rest_framework import serializers, viewsets, exceptions
 from rest_framework.permissions import BasePermission, IsAuthenticated, SAFE_METHODS
 
-from core.models import Meal, Restaurant
+from core.models import Meal
 
 
 class MealSerializer(serializers.ModelSerializer):
@@ -23,8 +23,8 @@ class MealViewSet(viewsets.ModelViewSet):
     serializer_class = MealSerializer
 
     def perform_create(self, serializer):
-        restaurant_id = serializer.initial_data.get("restaurant")
-        if not Restaurant.objects.filter(owner=self.request.user, id=restaurant_id).exists():
+        restaurant = serializer.validated_data.get("restaurant")
+        if restaurant.owner != self.request.user:
             raise exceptions.PermissionDenied("You must be the owner to create a meal in this restaurant")
         serializer.save()
 
