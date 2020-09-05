@@ -6,7 +6,7 @@ export enum UserType {
 }
 
 export type User = {
-  id?: number;
+  id: number;
   username?: string;
   email?: string;
   user_type?: UserType;
@@ -17,6 +17,7 @@ export type User = {
 };
 
 export const anonymousUser: User = {
+  id: 0,
   first_name: "Anonymous",
   token: "",
   anonymous: true,

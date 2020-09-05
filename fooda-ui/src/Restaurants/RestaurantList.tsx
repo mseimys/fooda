@@ -7,9 +7,10 @@ import restaurantService, { Restaurant } from "./service";
 
 type RestaurantProp = {
   restaurant: Restaurant;
+  owner?: boolean;
 };
 
-function RestaurantListItem({ restaurant }: RestaurantProp) {
+function RestaurantListItem({ restaurant, owner }: RestaurantProp) {
   const history = useHistory();
   return (
     <Card style={{ width: "300px" }}>
@@ -24,7 +25,7 @@ function RestaurantListItem({ restaurant }: RestaurantProp) {
           variant="primary"
           onClick={() => history.push(`/restaurants/${restaurant.id}`)}
         >
-          Order
+          {owner ? "Manage" : "Order Food"}
         </Button>
       </Card.Body>
     </Card>
@@ -56,7 +57,11 @@ export default function RestaurantList() {
           <h1 className="mb-4">My Restaurants</h1>
           <CardColumns>
             {myRestaurants.map((restaurant) => (
-              <RestaurantListItem key={restaurant.id} restaurant={restaurant} />
+              <RestaurantListItem
+                key={restaurant.id}
+                restaurant={restaurant}
+                owner
+              />
             ))}
           </CardColumns>
         </div>
