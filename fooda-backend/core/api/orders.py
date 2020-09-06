@@ -1,7 +1,7 @@
 from rest_framework import serializers, viewsets, exceptions
 from rest_framework.permissions import BasePermission, IsAuthenticated, SAFE_METHODS
 
-from core.models import Order, OrderHistoryItem, OrderItem
+from core.models import Order, OrderHistoryItem, OrderItem, UserType
 from .meals import MealSerializer
 
 
@@ -53,7 +53,9 @@ class OrderViewSet(viewsets.ModelViewSet):
 
     def get_queryset(self):
         queryset = super().get_queryset()
-        return queryset.filter(user=self.request.user)
+        if self.request.user.user_type == UserType.REGULAR:
+            return queryset.filter(user=self.request.user)
+        return queryset.filter(restaurant__owner=self.request.user)
 
 
 class OrderHistoryItemSerializer(serializers.ModelSerializer):

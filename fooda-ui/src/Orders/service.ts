@@ -30,7 +30,7 @@ export type Order = {
 
 export const isFinished = (order: Order) =>
   order.status === OrderStatus.CANCELED ||
-  order.status === OrderStatus.DELIVERED;
+  order.status === OrderStatus.RECEIVED;
 
 export const calculateTotal = (order: Order): string => {
   const total = reduce(
@@ -53,8 +53,13 @@ async function getOrder(orderId: string) {
   return (await axios.get<Order>(API.ORDER(orderId))).data;
 }
 
+async function updateOrderStatus(orderId: number, status: OrderStatus) {
+  return (await axios.patch<Order>(API.ORDER(orderId), { status })).data;
+}
+
 export default {
   getOrders,
   createOrder,
   getOrder,
+  updateOrderStatus,
 };

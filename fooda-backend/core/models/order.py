@@ -26,7 +26,7 @@ class Order(models.Model):
     items = models.ManyToManyField(Meal, through=OrderItem)
 
     class Meta:
-        ordering = ["-updated"]
+        ordering = ["-created"]
 
     def __str__(self):
         return f"Order {self.id} [{self.status}] by {self.user}"
