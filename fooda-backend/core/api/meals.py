@@ -5,8 +5,6 @@ from core.models import Meal
 
 
 class MealSerializer(serializers.ModelSerializer):
-    id = serializers.IntegerField(write_only=False)
-
     class Meta:
         model = Meal
         fields = "__all__"

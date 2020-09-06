@@ -5,8 +5,10 @@ from core.models import User, UserType
 
 
 @pytest.fixture(autouse=True)
-def enable_db_access_for_all_tests(db):
-    pass
+def enable_db_access_for_all_tests(db, settings):
+    settings.REST_FRAMEWORK["DEFAULT_AUTHENTICATION_CLASSES"].append(
+        "rest_framework.authentication.SessionAuthentication"
+    )
 
 
 @pytest.fixture

@@ -4,7 +4,7 @@ from rest_framework.test import APIClient
 def test_users_me_as_anonymous():
     client = APIClient()
     response = client.get("/users/me/")
-    assert response.status_code == 403
+    assert response.status_code == 401
 
 
 def test_users_me(owner):

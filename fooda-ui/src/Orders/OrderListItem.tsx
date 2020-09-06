@@ -1,5 +1,5 @@
 import React, { useContext } from "react";
-import { Link, useHistory } from "react-router-dom";
+import { Link } from "react-router-dom";
 import { Row, Col, Button, Badge } from "react-bootstrap";
 
 import { UserType, RootContext } from "../context";
@@ -38,7 +38,6 @@ function NextAction({ order: { id, status }, refresh }: OrderListItemProps) {
   const {
     user: { user_type },
   } = useContext(RootContext);
-  const history = useHistory();
 
   let nextAction: Function | null = null;
   let nextActionText = "";
@@ -64,14 +63,14 @@ function NextAction({ order: { id, status }, refresh }: OrderListItemProps) {
     case OrderStatus.IN_ROUTE: {
       if (user_type === UserType.OWNER) {
         nextAction = () => callApi(id!, OrderStatus.DELIVERED);
-        nextActionText = "Mark as delivered";
+        nextActionText = "Mark as Delivered";
       }
       break;
     }
     case OrderStatus.DELIVERED: {
       if (user_type === UserType.REGULAR) {
         nextAction = () => callApi(id!, OrderStatus.RECEIVED);
-        nextActionText = "Received";
+        nextActionText = "Mark as Received";
       }
       break;
     }
