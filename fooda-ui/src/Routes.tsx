@@ -3,7 +3,6 @@ import { Switch, Route, RouteProps, Redirect } from "react-router-dom";
 import { Container } from "react-bootstrap";
 
 import { RootContext } from "./context";
-import Dashboard from "./Dashboard/Dashboard";
 import OrderList from "./Orders/OrderList";
 import OrderDetails from "./Orders/OrderDetails";
 import EditRestaurant from "./Restaurants/EditRestaurant";
@@ -12,6 +11,7 @@ import RestaurantDetails from "./Restaurants/RestaurantDetails";
 import EditMeal from "./Restaurants/EditMeal";
 import Login from "./User/Login";
 import Signup from "./User/Signup";
+import UserList from "./User/UserList";
 
 function PrivateRoute({ children, ...rest }: RouteProps) {
   const { user } = useContext(RootContext);
@@ -45,7 +45,7 @@ export default function Routes() {
           <Signup />
         </Route>
         <PrivateRoute exact path="/">
-          <Dashboard />
+          <Redirect to={"/restaurants"} />
         </PrivateRoute>
         <PrivateRoute exact path="/orders">
           <OrderList />
@@ -64,6 +64,9 @@ export default function Routes() {
         </PrivateRoute>
         <PrivateRoute path="/restaurants">
           <RestaurantList />
+        </PrivateRoute>
+        <PrivateRoute path="/users">
+          <UserList />
         </PrivateRoute>
         <PrivateRoute exact path="/meals/new">
           <EditMeal isNew />

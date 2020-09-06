@@ -17,23 +17,13 @@ def test_users_me(owner):
     assert response.data["username"] == user.username
 
 
-def test_users_list_by_non_admin_users(owner, regular):
+def test_users_list(owner, regular):
     user, client = regular
 
     response = client.get("/users/")
 
     assert response.status_code == 200
-    assert len(response.data) == 1
-    assert response.data[0]["username"] == user.username
-
-
-def test_users_list_by_admin(admin, owner, regular):
-    user, client = admin
-
-    response = client.get("/users/")
-
-    assert response.status_code == 200
-    assert len(response.data) == 3
+    assert len(response.data) == 2
 
 
 def test_user_signup_as_anonymous():

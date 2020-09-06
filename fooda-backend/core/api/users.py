@@ -10,7 +10,7 @@ class UserSerializer(serializers.ModelSerializer):
 
 
 class UserViewSet(viewsets.ModelViewSet):
-    queryset = User.objects.none()
+    queryset = User.objects.all()
     serializer_class = UserSerializer
 
     def get_object(self):
@@ -18,11 +18,6 @@ class UserViewSet(viewsets.ModelViewSet):
             return self.request.user
 
         return super(UserViewSet, self).get_object()
-
-    def get_queryset(self):
-        if self.request.user.is_superuser:
-            return User.objects.all()
-        return User.objects.filter(pk=self.request.user.pk)
 
 
 class UserCreateSerializer(serializers.ModelSerializer):

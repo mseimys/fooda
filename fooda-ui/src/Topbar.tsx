@@ -2,7 +2,7 @@ import React, { useContext } from "react";
 import { Container, Navbar, Nav } from "react-bootstrap";
 import { Link } from "react-router-dom";
 
-import { RootContext } from "./context";
+import { RootContext, UserType } from "./context";
 import logo from "./logo.png";
 
 export default function Topbar() {
@@ -31,6 +31,11 @@ export default function Topbar() {
               <Link className="nav-link" to="/orders">
                 My Orders
               </Link>
+              {user.user_type === UserType.OWNER && (
+                <Link className="nav-link" to="/users">
+                  Users
+                </Link>
+              )}
             </Nav>
           </Navbar.Collapse>
         )}

@@ -58,8 +58,25 @@ const userService = {
   },
 
   me: async () => {
-    const result = await axios.get<User>(API.USER);
+    const result = await axios.get<User>(API.ME);
     return result.data;
+  },
+
+  getUser: async (userId: number) => {
+    const result = await axios.get<User>(API.USER(userId));
+    return result.data;
+  },
+
+  blockUser: async (restaurant: number, user: number) => {
+    await axios.post(API.BLOCKED_USERS, { restaurant, user });
+  },
+
+  getBlockedUsers: async (owner: number) => {
+    return (await axios.get(`${API.BLOCKED_USERS}?owner=${owner}`)).data;
+  },
+
+  deleteBlockedUser: async (id: number) => {
+    return (await axios.delete(API.BLOCKED_USER(id))).data;
   },
 };
 

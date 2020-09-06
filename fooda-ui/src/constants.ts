@@ -1,7 +1,10 @@
 export const API = {
   SIGNUP: "/api/signup/",
   TOKEN: "/api/token/",
-  USER: "/api/users/me/",
+  ME: "/api/users/me/",
+  USER: (userId: string | number) => `/api/users/${userId}/`,
+  BLOCKED_USERS: "/api/blocked_users/",
+  BLOCKED_USER: (id: number) => `/api/blocked_users/${id}/`,
   RESTAURANT: (restaurantId: string | number) =>
     `/api/restaurants/${restaurantId}/`,
   RESTAURANTS: "/api/restaurants/",

@@ -1,5 +1,5 @@
 from rest_framework import serializers, viewsets, exceptions
-from rest_framework.permissions import BasePermission, IsAuthenticated, SAFE_METHODS
+from rest_framework.permissions import BasePermission, IsAuthenticated
 
 from core.models import Order, OrderHistoryItem, OrderItem, UserType, Meal
 

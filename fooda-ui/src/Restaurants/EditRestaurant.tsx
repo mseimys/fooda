@@ -88,7 +88,7 @@ export default function EditRestaurant({ isNew }: EditRestaurantProps) {
       </Form.Group>
       {error && <div className="text-danger mb-3">{error}</div>}
       <Button block type="submit">
-        Create
+        {isNew ? "Create" : "Save"}
       </Button>
     </Form>
   );

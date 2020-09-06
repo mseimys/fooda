@@ -5,6 +5,12 @@ export enum UserType {
   OWNER = "OWNER",
 }
 
+export type BlockedUser = {
+  id: number;
+  restaurant: number;
+  user: number;
+};
+
 export type User = {
   id: number;
   username?: string;

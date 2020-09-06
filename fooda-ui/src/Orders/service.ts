@@ -41,6 +41,9 @@ export const calculateTotal = (order: Order): string => {
   return (Math.round(total * 100) / 100).toFixed(2);
 };
 
+export const calculateItems = (order: Order): number =>
+  order.items.reduce((total, item) => total + item.count, 0);
+
 async function getOrders() {
   return (await axios.get<Order[]>(API.ORDERS)).data;
 }

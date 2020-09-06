@@ -35,7 +35,7 @@ class RestaurantViewSet(viewsets.ModelViewSet):
         serializer.save(owner=self.request.user)
 
     def get_queryset(self):
-        queryset = Restaurant.objects.all()
+        queryset = Restaurant.objects.exclude(blocked_users__user=self.request.user)
         owner = self.request.query_params.get("owner", None)
         if owner is not None:
             queryset = queryset.filter(owner=owner)
