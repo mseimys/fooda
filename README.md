@@ -1,14 +1,14 @@
-# Food Delivery Application
+# Food Delivery Application (FooDA)
 
 ## Task
 
-- User must be able to create an account and log in.
-- Implement 2 roles with different permission levels
+- [x] User must be able to create an account and log in.
+- [x] Implement 2 roles with different permission levels
   - Regular User: Can see all restaurants and place orders from them
   - Restaurant Owner: Can CRUD restaurants and meals
-- A Restaurant should have a name and description of the type of food they serve
-- A meal should have a name, description, and price
-- Orders consist of a list of meals, date, total amount and status
+- [x] A Restaurant should have a name and description of the type of food they serve
+- [x] A meal should have a name, description, and price
+- [x] Orders consist of a list of meals, date, total amount and status
 - An Order should be placed for a single Restaurant only, but it can have multiple meals
 - Restaurant Owners and Regular Users can change the Order Status respecting below flow and permissions:
   - Placed: Once a Regular user places an Order
@@ -30,6 +30,25 @@
 - Bonus: unit and e2e tests.
 
 ## Development notes
+
+Backend is created using Python 3.8 and Django 3.1, using Django Rest Framework 3.11 for API. Running backend:
+
+- Create and activate python virtual environment
+- Enter directory `fooda-backend`
+- Install requirements via `pip install -r requirements.txt`
+- Run database migrations when running first time: `./manage.py migrate`
+- Launch backend: `./manage.py runserver`
+- Navigate to backend: http://localhost:8000/
+- Superuser can be created using command `./manage.py createsuperuser`. Go to http://localhost:8000/admin/ to login.
+- Running tests: `pytest`
+
+Fooda Frontend is created using TypeScript 3.9.7 and React 16.13. Bootstrap is used for styling. Launching frontend:
+
+- `npm install`
+- `npm start`
+- Navigate to http://localhost:3000/
+- All requests to http://localhost:3000/api/<path> are proxied to backend's http://localhost:8000/<path>
+- Running tests: `npm test` (and press `a` to rerun all tests)
 
 ### Resources
 
