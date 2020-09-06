@@ -3,6 +3,8 @@ import { API } from "../constants";
 import { Meal } from "../Restaurants/service";
 import { reduce } from "lodash";
 
+import { User } from "../context";
+
 export enum OrderStatus {
   PLACED = "PLACED",
   CANCELED = "CANCELED",
@@ -18,6 +20,13 @@ export type OrderItem = {
   count: number;
 };
 
+export type OrderHistoryItem = {
+  message: string;
+  user: User;
+  order: number;
+  created: string;
+};
+
 export type Order = {
   id?: number;
   user: number;
@@ -26,6 +35,7 @@ export type Order = {
   updated?: string;
   items: OrderItem[];
   status: OrderStatus;
+  history_items?: OrderHistoryItem[];
 };
 
 export const isFinished = (order: Order) =>

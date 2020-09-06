@@ -2,6 +2,7 @@ from rest_framework import serializers, viewsets, exceptions
 from rest_framework.permissions import BasePermission, IsAuthenticated
 
 from core.models import Order, OrderHistoryItem, OrderItem, UserType, Meal
+from .users import SimpleUserSerializer
 
 
 def can_status_be_modified(old_status, new_status, user_type):
@@ -46,8 +47,17 @@ class OrderItemSerializer(serializers.ModelSerializer):
         exclude = ("order",)
 
 
+class OrderHistoryItemSerializer(serializers.ModelSerializer):
+    user = SimpleUserSerializer()
+
+    class Meta:
+        model = OrderHistoryItem
+        fields = "__all__"
+
+
 class OrderSerializer(serializers.ModelSerializer):
     items = OrderItemSerializer(source="orderitem_set", many=True)
+    history_items = OrderHistoryItemSerializer(many=True, read_only=True)
 
     class Meta:
         model = Order
@@ -75,6 +85,9 @@ class OrderSerializer(serializers.ModelSerializer):
         for item in order_items_to_create:
             item.order_id = order.id
         OrderItem.objects.bulk_create(order_items_to_create)
+        OrderHistoryItem.objects.create(
+            order=order, user=order.user, message=f"Order created with status {order.status}",
+        )
         return order
 
 
@@ -98,14 +111,20 @@ class OrderViewSet(viewsets.ModelViewSet):
         if not can_status_be_modified(old_status, new_status, self.request.user.user_type) and new_status != old_status:
             raise exceptions.PermissionDenied()
         serializer.save()
-
-
-class OrderHistoryItemSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = OrderHistoryItem
-        fields = "__all__"
+        OrderHistoryItem.objects.create(
+            order=serializer.instance,
+            user=self.request.user,
+            message=f"Status changed from {old_status} to {new_status}",
+        )
 
 
 class OrderHistoryViewSet(viewsets.ModelViewSet):
     queryset = OrderHistoryItem.objects.select_related("order", "user")
     serializer_class = OrderHistoryItemSerializer
+
+    def get_queryset(self):
+        queryset = super().get_queryset()
+        order = self.request.query_params.get("order", None)
+        if order is not None:
+            return queryset.filter(order_id=order)
+        return queryset.none()

@@ -82,6 +82,27 @@ export default function OrderDetails() {
         </Col>
         <Col>${calculateTotal(order)}</Col>
       </Row>
+      <h2 className="mt-4">Order History</h2>
+      <div className="w-75">
+        <table className="table table-striped table-bordered">
+          <thead>
+            <tr>
+              <th>Date</th>
+              <th>User</th>
+              <th>Message</th>
+            </tr>
+          </thead>
+          <tbody>
+            {order.history_items?.map((item) => (
+              <tr>
+                <td>{formatDate(item.created)}</td>
+                <td>{item.user.username}</td>
+                <td>{item.message}</td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
     </div>
   );
 }
