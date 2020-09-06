@@ -4,4 +4,6 @@ export const API = {
   USER: "/api/users/me/",
   RESTAURANT: (restaurantId: string) => `/api/restaurants/${restaurantId}/`,
   RESTAURANTS: "/api/restaurants/",
+  ORDER: (orderId: string) => `/api/orders/${orderId}/`,
+  ORDERS: "/api/orders/",
 };

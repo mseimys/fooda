@@ -1,21 +1,47 @@
 import React, { useEffect, useState, useContext } from "react";
 import { useParams } from "react-router-dom";
 import { Col, Row, CardColumns, Spinner } from "react-bootstrap";
+import { findIndex } from "lodash";
 
-import { Order, OrderStatus } from "../Orders/service";
+import { Order, OrderItem, OrderStatus } from "../Orders/service";
 import restaurantService, { Restaurant, Meal } from "./service";
 import ActiveOrder from "./ActiveOrder";
 import { RootContext } from "../context";
 import MealItem from "./MealItem";
+
+const addMealToOrder = (meal: Meal, order: Order) => {
+  const items = [...order.items];
+  const index = findIndex(items, (item: OrderItem) => item.meal.id === meal.id);
+  if (index === -1) {
+    items.push({ meal, count: 1 });
+  } else {
+    items[index].count += 1;
+  }
+  return { ...order, items };
+};
+
+const removeMealFromOrder = (meal: Meal, order: Order) => {
+  const items = [...order.items];
+  const index = findIndex(items, (item: OrderItem) => item.meal.id === meal.id);
+  if (index !== -1) {
+    if (items[index].count > 1) {
+      items[index].count -= 1;
+    } else {
+      items.splice(index, 1);
+    }
+  }
+  return { ...order, items };
+};
 
 export default function RestaurantDetails() {
   const { restaurantId } = useParams();
   const { user } = useContext(RootContext);
 
   const [order, setOrder] = useState<Order>({
+    id: 0,
     user: user.id,
     restaurant: Number(restaurantId),
-    meals: [],
+    items: [],
     status: OrderStatus.PLACED,
   });
   const [restaurant, setRestaurant] = useState<Restaurant>();
@@ -32,13 +58,8 @@ export default function RestaurantDetails() {
     return <Spinner animation="border" />;
   }
 
-  const addMeal = (meal: Meal) =>
-    setOrder({ ...order, meals: [...order.meals, { ...meal }] });
-  const removeMeal = (meal: Meal) => {
-    const index = order.meals.indexOf(meal);
-    order.meals.splice(index, 1);
-    setOrder({ ...order, meals: [...order.meals] });
-  };
+  const addMeal = (meal: Meal) => setOrder(addMealToOrder(meal, order));
+  const removeMeal = (meal: Meal) => setOrder(removeMealFromOrder(meal, order));
 
   return (
     <Row>
@@ -56,8 +77,12 @@ export default function RestaurantDetails() {
       </Col>
       <Col md={8}>
         <CardColumns>
-          {restaurant.meals.map((meal, index) => (
-            <MealItem meal={meal} addToOrder={() => addMeal(meal)} />
+          {restaurant.meals.map((meal) => (
+            <MealItem
+              key={meal.id}
+              meal={meal}
+              addToOrder={() => addMeal(meal)}
+            />
           ))}
         </CardColumns>
       </Col>

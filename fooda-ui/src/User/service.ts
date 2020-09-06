@@ -21,10 +21,7 @@ const userService = {
     try {
       return (await axios.post<User>(API.SIGNUP, data)).data;
     } catch (err) {
-      let message = JSON.stringify(err);
-      if (err.data) {
-        message = err.data;
-      }
+      const message = JSON.stringify(err.data);
       throw Error(message);
     }
   },

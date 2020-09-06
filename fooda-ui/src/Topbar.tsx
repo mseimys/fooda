@@ -29,7 +29,7 @@ export default function Topbar() {
                 Restaurants
               </Link>
               <Link className="nav-link" to="/orders">
-                Orders
+                My Orders
               </Link>
             </Nav>
           </Navbar.Collapse>

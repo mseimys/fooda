@@ -1,7 +1,7 @@
 from django.contrib import admin
 from django.contrib.auth.admin import UserAdmin as BaseAdmin
 
-from core.models import Restaurant, User, Meal, BlockedUser, Order, OrderHistoryItem
+from core.models import Restaurant, User, Meal, BlockedUser, Order, OrderHistoryItem, OrderItem
 
 admin.site.site_header = "Fooda admin"
 admin.site.site_title = "Fooda admin"
@@ -25,6 +25,14 @@ class MealAdmin(admin.ModelAdmin):
     list_display = ("id", "name", "restaurant")
 
 
+class OrderItemInline(admin.TabularInline):
+    model = OrderItem
+
+
+@admin.register(Order)
+class OrderAdmin(admin.ModelAdmin):
+    inlines = [OrderItemInline]
+
+
 admin.site.register(BlockedUser, admin.ModelAdmin)
-admin.site.register(Order, admin.ModelAdmin)
 admin.site.register(OrderHistoryItem, admin.ModelAdmin)

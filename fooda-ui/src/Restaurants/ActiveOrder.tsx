@@ -1,7 +1,12 @@
-import React, { useEffect, useState } from "react";
+import React from "react";
+import { useHistory } from "react-router-dom";
 import { Button, ListGroup } from "react-bootstrap";
 
-import { Order } from "../Orders/service";
+import orderService, {
+  Order,
+  OrderItem,
+  calculateTotal,
+} from "../Orders/service";
 import { Meal } from "./service";
 
 type ActiveOrderProps = {
@@ -11,8 +16,7 @@ type ActiveOrderProps = {
 };
 
 type ActiveOrderItemProps = {
-  meal: Meal;
-  count: number;
+  item: OrderItem;
   addToOrder: () => void;
   removeFromOrder: () => void;
 };
@@ -24,21 +28,25 @@ const OrderButton = (props: any) => (
 );
 
 function ActiveOrderItem({
-  meal,
-  count,
+  item,
   addToOrder,
   removeFromOrder,
 }: ActiveOrderItemProps) {
   return (
     <ListGroup.Item className="d-flex">
-      <div className="flex-grow-1 pr-2">{meal.name}</div>
+      <div className="flex-grow-1 pr-2">{item.meal.name}</div>
       <div>
         <OrderButton onClick={() => removeFromOrder()}>-</OrderButton>
-        <span className="px-2">{count}</span>
+        <span
+          className="text-center"
+          style={{ width: "30px", display: "inline-block" }}
+        >
+          {item.count}
+        </span>
         <OrderButton onClick={() => addToOrder()}>+</OrderButton>
       </div>
       <div style={{ flex: "none", textAlign: "right", width: "60px" }}>
-        ${meal.price}
+        ${item.meal.price}
       </div>
     </ListGroup.Item>
   );
@@ -49,23 +57,37 @@ export default function ActiveOrder({
   addMeal,
   removeMeal,
 }: ActiveOrderProps) {
+  const history = useHistory();
+
+  const placeOrder = async () => {
+    await orderService.createOrder(order);
+    history.push("/orders");
+  };
+
   return (
     <div>
       <hr />
       <h3>Current Order</h3>
-      {order.meals.length === 0 && <p className="text-muted">No items added</p>}
       <ListGroup>
-        {order.meals.map((meal, index) => (
+        {order.items.map((item, index) => (
           <ActiveOrderItem
             key={index}
-            meal={meal}
-            count={1}
-            addToOrder={() => addMeal(meal)}
-            removeFromOrder={() => removeMeal(meal)}
+            item={item}
+            addToOrder={() => addMeal(item.meal)}
+            removeFromOrder={() => removeMeal(item.meal)}
           />
         ))}
-        {order.meals.length > 0 && (
-          <Button className="mt-2">Place Order</Button>
+        {order.items.length > 0 ? (
+          <>
+            <h5 className="text-right mt-3 px-4">
+              TOTAL: ${calculateTotal(order)}
+            </h5>
+            <Button className="mt-2" onClick={() => placeOrder()}>
+              Place Order
+            </Button>
+          </>
+        ) : (
+          <p className="text-muted">No items added</p>
         )}
       </ListGroup>
     </div>
