@@ -21,11 +21,11 @@ const userService = {
     try {
       return (await axios.post<User>(API.SIGNUP, data)).data;
     } catch (err) {
-      let message = String(err);
-      if (err.response && err.response.data) {
-        message = err.response.data;
+      let message = JSON.stringify(err);
+      if (err.data) {
+        message = err.data;
       }
-      throw Error("Error! " + JSON.stringify(message));
+      throw Error(message);
     }
   },
 

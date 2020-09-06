@@ -5,6 +5,7 @@ import { Container } from "react-bootstrap";
 import { RootContext } from "./context";
 import Dashboard from "./Dashboard/Dashboard";
 import OrderList from "./Orders/OrderList";
+import NewRestaurant from "./Restaurants/NewRestaurant";
 import RestaurantList from "./Restaurants/RestaurantList";
 import RestaurantDetails from "./Restaurants/RestaurantDetails";
 import Login from "./User/Login";
@@ -46,6 +47,9 @@ export default function Routes() {
         </PrivateRoute>
         <PrivateRoute path="/orders">
           <OrderList />
+        </PrivateRoute>
+        <PrivateRoute exact path="/restaurants/new">
+          <NewRestaurant />
         </PrivateRoute>
         <PrivateRoute exact path="/restaurants/:restaurantId">
           <RestaurantDetails />

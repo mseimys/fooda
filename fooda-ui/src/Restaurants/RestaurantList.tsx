@@ -1,5 +1,5 @@
 import React, { useEffect, useState, useContext } from "react";
-import { useHistory } from "react-router-dom";
+import { Link, useHistory } from "react-router-dom";
 import { Card, CardColumns, Button } from "react-bootstrap";
 
 import { RootContext, UserType } from "../context";
@@ -54,7 +54,15 @@ export default function RestaurantList() {
     <div>
       {user.user_type === UserType.OWNER && (
         <div>
-          <h1 className="mb-4">My Restaurants</h1>
+          <h1 className="mb-4">
+            My Restaurants
+            <Link
+              className="btn btn-sm btn-primary float-right"
+              to={"/restaurants/new"}
+            >
+              Create New
+            </Link>
+          </h1>
           <CardColumns>
             {myRestaurants.map((restaurant) => (
               <RestaurantListItem
