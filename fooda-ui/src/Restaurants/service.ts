@@ -37,10 +37,25 @@ async function deleteRestaurant(restaurantId: string) {
   return (await axios.delete<Restaurant>(API.RESTAURANT(restaurantId))).data;
 }
 
+async function createMeal(data: Meal) {
+  return (await axios.post<Meal>(API.MEALS, data)).data;
+}
+
+async function getMeal(mealId: string) {
+  return (await axios.get<Meal>(API.MEAL(mealId))).data;
+}
+
+async function updateMeal(mealId: string, data: Meal) {
+  return (await axios.put<Meal>(API.MEAL(mealId), data)).data;
+}
+
 export default {
   getRestaurants,
   createRestaurant,
   getRestaurant,
   updateRestaurant,
   deleteRestaurant,
+  createMeal,
+  getMeal,
+  updateMeal,
 };

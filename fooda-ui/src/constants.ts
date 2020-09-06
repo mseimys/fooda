@@ -7,4 +7,6 @@ export const API = {
   RESTAURANTS: "/api/restaurants/",
   ORDER: (orderId: string | number) => `/api/orders/${orderId}/`,
   ORDERS: "/api/orders/",
+  MEAL: (mealId: string | number) => `/api/meals/${mealId}/`,
+  MEALS: "/api/meals/",
 };

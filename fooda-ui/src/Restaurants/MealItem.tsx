@@ -1,14 +1,16 @@
 import React from "react";
+import { Link } from "react-router-dom";
 import { Card, Button } from "react-bootstrap";
 
 import { Meal } from "./service";
 
 type MealItemProps = {
   meal: Meal;
+  isOwner?: boolean;
   addToOrder: () => void;
 };
 
-export default function MealItem({ meal, addToOrder }: MealItemProps) {
+export default function MealItem({ meal, isOwner, addToOrder }: MealItemProps) {
   return (
     <Card style={{ width: "235px" }}>
       <Card.Img
@@ -21,9 +23,15 @@ export default function MealItem({ meal, addToOrder }: MealItemProps) {
           <div className="pl-2 text-primary">${meal.price}</div>
         </Card.Title>
         <Card.Text>{meal.description}&nbsp;</Card.Text>
-        <Button variant="primary" onClick={() => addToOrder()}>
-          Add To Order
-        </Button>
+        {isOwner ? (
+          <Link to={`/meals/${meal.id}`} className="btn btn-primary">
+            Edit
+          </Link>
+        ) : (
+          <Button variant="primary" onClick={() => addToOrder()}>
+            Add To Order
+          </Button>
+        )}
       </Card.Body>
     </Card>
   );

@@ -1,33 +1,42 @@
-import React, { useState, useContext } from "react";
-import { useHistory } from "react-router-dom";
-import { Button, Form } from "react-bootstrap";
+import React, { useState, useEffect, useContext } from "react";
+import { useParams, useHistory } from "react-router-dom";
+import { Button, Form, Spinner } from "react-bootstrap";
 import { useFormik } from "formik";
 
 import { RootContext } from "../context";
 import restaurantService, { Restaurant } from "./service";
 
-export default function NewRestaurant() {
+type EditRestaurantProps = {
+  isNew?: boolean;
+};
+
+export default function EditRestaurant({ isNew }: EditRestaurantProps) {
   const history = useHistory();
+  const { restaurantId } = useParams();
   const [error, setError] = useState("");
 
   const { user } = useContext(RootContext);
+  const [initialValues, setInitialValues] = useState<Restaurant>({
+    id: 0,
+    name: "",
+    description: "",
+    owner: user.id,
+    meals: [],
+  });
+  const [loading, setLoading] = useState(true);
 
   const formik = useFormik<Restaurant>({
-    initialValues: {
-      id: 0,
-      name: "",
-      description: "",
-      owner: user.id,
-      meals: [],
-    },
-
+    initialValues,
+    enableReinitialize: true,
     onSubmit: async (values) => {
       setError("");
       try {
-        const restaurant = await restaurantService.createRestaurant(values);
-        history.push(`/restaurants/${restaurant.id}`);
+        isNew
+          ? await restaurantService.createRestaurant(values)
+          : await restaurantService.updateRestaurant(restaurantId, values);
+        history.push(`/restaurants`);
       } catch (err) {
-        let message = "Error creating restaurant!";
+        let message = "Error!";
         if (err.data) {
           message = JSON.stringify(err.data);
         }
@@ -36,12 +45,27 @@ export default function NewRestaurant() {
     },
   });
 
+  useEffect(() => {
+    isNew
+      ? setLoading(false)
+      : restaurantService.getRestaurant(restaurantId).then((restaurant) => {
+          setInitialValues(restaurant);
+          setLoading(false);
+        });
+  }, [restaurantId, isNew]);
+
+  if (loading) {
+    return <Spinner animation="border" />;
+  }
+
   return (
     <Form
       onSubmit={formik.handleSubmit as any}
       style={{ margin: "0 auto", maxWidth: "320px" }}
     >
-      <h1 className="text-center mb-4">Create a new restaurant</h1>
+      <h1 className="text-center mb-4">
+        {isNew ? "Create a new restaurant" : "Edit"}
+      </h1>
       <Form.Group controlId="username">
         <Form.Label>Name</Form.Label>
         <Form.Control
@@ -52,7 +76,7 @@ export default function NewRestaurant() {
           onChange={formik.handleChange}
         />
       </Form.Group>
-      <Form.Group controlId="email">
+      <Form.Group controlId="description">
         <Form.Label>Description</Form.Label>
         <Form.Control
           as="textarea"

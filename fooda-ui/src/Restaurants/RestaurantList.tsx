@@ -7,10 +7,10 @@ import restaurantService, { Restaurant } from "./service";
 
 type RestaurantProp = {
   restaurant: Restaurant;
-  owner?: boolean;
+  isOwner?: boolean;
 };
 
-function RestaurantListItem({ restaurant, owner }: RestaurantProp) {
+function RestaurantListItem({ restaurant, isOwner }: RestaurantProp) {
   const history = useHistory();
   return (
     <Card style={{ width: "300px" }}>
@@ -21,12 +21,29 @@ function RestaurantListItem({ restaurant, owner }: RestaurantProp) {
       <Card.Body>
         <Card.Title>{restaurant.name}</Card.Title>
         <Card.Text>{restaurant.description}</Card.Text>
-        <Button
-          variant="primary"
-          onClick={() => history.push(`/restaurants/${restaurant.id}`)}
-        >
-          {owner ? "Manage" : "Order Food"}
-        </Button>
+        {isOwner ? (
+          <div className="d-flex justify-content-between">
+            <Button
+              variant="primary"
+              onClick={() => history.push(`/restaurants/${restaurant.id}`)}
+            >
+              Manage
+            </Button>
+            <Button
+              variant="primary"
+              onClick={() => history.push(`/restaurants/${restaurant.id}/edit`)}
+            >
+              Edit
+            </Button>
+          </div>
+        ) : (
+          <Button
+            variant="primary"
+            onClick={() => history.push(`/restaurants/${restaurant.id}`)}
+          >
+            Order Food
+          </Button>
+        )}
       </Card.Body>
     </Card>
   );
@@ -68,18 +85,22 @@ export default function RestaurantList() {
               <RestaurantListItem
                 key={restaurant.id}
                 restaurant={restaurant}
-                owner
+                isOwner
               />
             ))}
           </CardColumns>
         </div>
       )}
-      <h1 className="my-4">Restaurants</h1>
-      <CardColumns>
-        {restaurants.map((restaurant) => (
-          <RestaurantListItem key={restaurant.id} restaurant={restaurant} />
-        ))}
-      </CardColumns>
+      {user.user_type === UserType.REGULAR && (
+        <div>
+          <h1 className="my-4">Restaurants</h1>
+          <CardColumns>
+            {restaurants.map((restaurant) => (
+              <RestaurantListItem key={restaurant.id} restaurant={restaurant} />
+            ))}
+          </CardColumns>
+        </div>
+      )}
     </div>
   );
 }

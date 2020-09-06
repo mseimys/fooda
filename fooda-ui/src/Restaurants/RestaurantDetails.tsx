@@ -1,12 +1,12 @@
 import React, { useEffect, useState, useContext } from "react";
-import { useParams } from "react-router-dom";
-import { Col, Row, CardColumns, Spinner } from "react-bootstrap";
+import { useHistory, useParams } from "react-router-dom";
+import { Button, Col, Row, CardColumns, Spinner } from "react-bootstrap";
 import { findIndex } from "lodash";
 
 import { Order, OrderItem, OrderStatus } from "../Orders/service";
 import restaurantService, { Restaurant, Meal } from "./service";
 import ActiveOrder from "./ActiveOrder";
-import { RootContext } from "../context";
+import { RootContext, UserType } from "../context";
 import MealItem from "./MealItem";
 
 const addMealToOrder = (meal: Meal, order: Order) => {
@@ -34,9 +34,9 @@ const removeMealFromOrder = (meal: Meal, order: Order) => {
 };
 
 export default function RestaurantDetails() {
+  const history = useHistory();
   const { restaurantId } = useParams();
   const { user } = useContext(RootContext);
-
   const [order, setOrder] = useState<Order>({
     id: 0,
     user: user.id,
@@ -48,8 +48,8 @@ export default function RestaurantDetails() {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    restaurantService.getRestaurant(restaurantId).then((restaurants) => {
-      setRestaurant(restaurants);
+    restaurantService.getRestaurant(restaurantId).then((restaurant) => {
+      setRestaurant(restaurant);
       setLoading(false);
     });
   }, [restaurantId]);
@@ -73,7 +73,22 @@ export default function RestaurantDetails() {
           <h1>{restaurant.name}</h1>
           <p className="text-muted">{restaurant.description}</p>
         </div>
-        <ActiveOrder order={order} addMeal={addMeal} removeMeal={removeMeal} />
+        {user.user_type === UserType.REGULAR && (
+          <ActiveOrder
+            order={order}
+            addMeal={addMeal}
+            removeMeal={removeMeal}
+          />
+        )}
+        {user.user_type === UserType.OWNER && (
+          <Button
+            onClick={() =>
+              history.push("/meals/new", { restaurantId: restaurant.id })
+            }
+          >
+            Add Meal
+          </Button>
+        )}
       </Col>
       <Col md={8}>
         <CardColumns>
@@ -82,6 +97,7 @@ export default function RestaurantDetails() {
               key={meal.id}
               meal={meal}
               addToOrder={() => addMeal(meal)}
+              isOwner={user.user_type === UserType.OWNER}
             />
           ))}
         </CardColumns>

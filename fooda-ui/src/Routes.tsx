@@ -6,9 +6,10 @@ import { RootContext } from "./context";
 import Dashboard from "./Dashboard/Dashboard";
 import OrderList from "./Orders/OrderList";
 import OrderDetails from "./Orders/OrderDetails";
-import NewRestaurant from "./Restaurants/NewRestaurant";
+import EditRestaurant from "./Restaurants/EditRestaurant";
 import RestaurantList from "./Restaurants/RestaurantList";
 import RestaurantDetails from "./Restaurants/RestaurantDetails";
+import EditMeal from "./Restaurants/EditMeal";
 import Login from "./User/Login";
 import Signup from "./User/Signup";
 
@@ -53,13 +54,22 @@ export default function Routes() {
           <OrderDetails />
         </PrivateRoute>
         <PrivateRoute exact path="/restaurants/new">
-          <NewRestaurant />
+          <EditRestaurant isNew />
         </PrivateRoute>
         <PrivateRoute exact path="/restaurants/:restaurantId">
           <RestaurantDetails />
         </PrivateRoute>
+        <PrivateRoute exact path="/restaurants/:restaurantId/edit">
+          <EditRestaurant />
+        </PrivateRoute>
         <PrivateRoute path="/restaurants">
           <RestaurantList />
+        </PrivateRoute>
+        <PrivateRoute exact path="/meals/new">
+          <EditMeal isNew />
+        </PrivateRoute>
+        <PrivateRoute exact path="/meals/:mealId">
+          <EditMeal />
         </PrivateRoute>
       </Switch>
     </Container>
