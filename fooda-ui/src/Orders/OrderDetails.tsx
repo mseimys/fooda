@@ -94,7 +94,7 @@ export default function OrderDetails() {
           </thead>
           <tbody>
             {order.history_items?.map((item) => (
-              <tr>
+              <tr key={item.id}>
                 <td>{formatDate(item.created)}</td>
                 <td>{item.user.username}</td>
                 <td>{item.message}</td>

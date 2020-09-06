@@ -13,7 +13,7 @@ export default function UserList() {
     userService.getBlockedUsers(user.id).then((blockedUsers) => {
       setBlockedUsers(blockedUsers);
     });
-  }, [refresh]);
+  }, [refresh, user]);
 
   if (!blockedUsers) {
     return <Spinner animation="border" />;

@@ -21,6 +21,7 @@ export type OrderItem = {
 };
 
 export type OrderHistoryItem = {
+  id: number;
   message: string;
   user: User;
   order: number;
