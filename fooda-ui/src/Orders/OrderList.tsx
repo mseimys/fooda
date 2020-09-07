@@ -39,7 +39,7 @@ export default function OrderList() {
         </>
       )}
       <hr />
-      <h4 className="mb-4">Order History</h4>
+      <h4 className="mb-4">Finished Orders</h4>
       {finishedOrders.length === 0 ? (
         <p className="text-muted">No finished orders</p>
       ) : (

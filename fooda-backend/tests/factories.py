@@ -1,6 +1,6 @@
 import factory
 
-from core.models import User, UserType, Restaurant, Meal, Order, OrderItem
+from core.models import User, UserType, Restaurant, Meal, Order, OrderItem, BlockedUser
 
 
 class UserFactory(factory.django.DjangoModelFactory):
@@ -44,3 +44,11 @@ class OrderFactory(factory.django.DjangoModelFactory):
     user = factory.SubFactory(UserFactory, user_type=UserType.OWNER)
     restaurant = factory.SubFactory(RestaurantFactory)
     orderitem_set = factory.RelatedFactory(OrderItemFactory, factory_related_name="order")
+
+
+class BlockedUserFactory(factory.django.DjangoModelFactory):
+    class Meta:
+        model = BlockedUser
+
+    user = factory.SubFactory(UserFactory, user_type=UserType.REGULAR)
+    restaurant = factory.SubFactory(RestaurantFactory)

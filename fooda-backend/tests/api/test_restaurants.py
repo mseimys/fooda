@@ -1,4 +1,4 @@
-from tests.factories import RestaurantFactory, MealFactory
+from tests.factories import RestaurantFactory, MealFactory, BlockedUserFactory
 
 
 def test_restaurant_list(regular):
@@ -51,3 +51,14 @@ def test_restaurant_can_be_modified_by_its_owner(client):
 
     assert response.status_code == 200
     assert response.data["name"] == "Test"
+
+
+def test_restaurant_is_not_visible_for_blocked_user(regular):
+    user, client = regular
+    restaurant = RestaurantFactory()
+    BlockedUserFactory(user=user, restaurant=restaurant)
+
+    response = client.get("/restaurants/")
+
+    assert response.status_code == 200
+    assert len(response.data) == 0
