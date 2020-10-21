@@ -5,3 +5,5 @@ django-cors-headers
 pytest
 pytest-django
 factory_boy
+psycopg2-binary
+apig_wsgi
