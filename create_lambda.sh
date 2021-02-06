@@ -8,4 +8,4 @@ cp -R fooda-backend/* fooda-lambda/
 cd fooda-lambda
 zip -r9 ../fooda-lambda.zip .
 cd ..
-#aws lambda update-function-code --function-name api-seimys-net --zip-file fileb://fooda-lambda.zip
+aws lambda update-function-code --function-name api-seimys-net --zip-file fileb://fooda-lambda.zip

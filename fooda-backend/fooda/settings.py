@@ -61,6 +61,7 @@ CORS_ALLOWED_ORIGINS = [
     "https://www.seimys.net",
 ]
 
+USE_X_FORWARDED_HOST = True
 
 AUTH_USER_MODEL = "core.User"
 

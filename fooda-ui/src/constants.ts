@@ -1,4 +1,4 @@
-const API_ROOT = process.env.API_ROOT || "https://api.seimys.net";
+const API_ROOT = process.env.API_ROOT || "/api";
 
 export const API = {
   SIGNUP: API_ROOT + "/signup/",
